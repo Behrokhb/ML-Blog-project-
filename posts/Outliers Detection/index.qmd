@@ -1,0 +1,41 @@
+---
+title: "Outliers Detection"
+author: "Behrokh Bazmara"
+date: "2023-12-01"
+categories: [news, code, analysis]
+---
+
+In my analysis of crash data using average annual daily traffic (AADT), I employed the DBSCAN (Density-Based Spatial Clustering of Applications with Noise) algorithm for outlier detection. DBSCAN is particularly effective in identifying clusters of data points that exhibit high density and separating them from less-dense areas, thereby highlighting potential outliers or noise. For this application, each data point represents a specific location on the roadway network, with features including crash counts and AADT values.
+
+By employing DBSCAN, I aimed to distinguish regions in the data set where both crash counts and AADT values deviate significantly from the overall patterns. The algorithm classified data points into three categories: core points, which belong to dense regions; border points, which are near dense regions; and noise points, representing potential outliers. This analysis allowed me to pinpoint segments where the relationship between crash incidents and AADT was notably different, potentially indicating areas of higher risk or unexpected safety performance. The identification of these outliers through DBSCAN provided valuable insights into locations where targeted interventions or further investigation might be warranted to improve road safety.
+
+
+
+```{r}
+                      # Outliers Detection 
+
+# Install and load necessary packages
+#install.packages("dbscan")
+library(dbscan)
+library(MASS)
+library(lme4)
+
+# View the structure of the data set (Read in data)
+FitData2<-read.csv('Book3.csv') 
+names(FitData2)#looking at the data
+
+# Generate synthetic data with outliers
+set.seed(123)
+data <- FitData2[,19:20]
+
+# Perform DBSCAN outlier detection
+dbscan_result <- dbscan(data, eps = 1.5, minPts = 5)
+
+# Visualize the data and outliers using scatterplots
+plot(data[, 1], data[, 2], col = dbscan_result$cluster + 1, pch = 16,
+     main = "DBSCAN Outlier Detection", xlab = "Crash", ylab = "Traffic")
+
+# Add labels for outliers
+outliers <- data[dbscan_result$cluster == 0, ]
+text(outliers[, 1], outliers[, 2], labels = "Outlier", col = "green")
+```

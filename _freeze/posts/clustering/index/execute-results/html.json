@@ -1,0 +1,16 @@
+{
+  "hash": "7fd6d3b6bae0753a96a2c87c50db5ad6",
+  "result": {
+    "markdown": "---\ntitle: \"Clustering\"\nauthor: \"Behrokh Bazmara\"\ndate: \"2023-12-01\"\ncategories: [news, code, analysis]\n---\n\n\nIn my R code, I employed the elbow method to determine the optimal number of clusters for a clustering analysis on a crash data set.\n\nThe data set included crucial features such as roadway \"lane_count\" and \"mix type\", which are essential factors in understanding the characteristics of different road segments concerning safety.\n\nThe first step involved selecting and possibly standardizing these features to ensure uniform contributions to the clustering process.\n\nSubsequently, I applied the k-means clustering algorithm across a range of cluster numbers (k) and calculated the sum of squared distances within clusters (WSS) for each configuration. The elbow method involves plotting the number of clusters against the corresponding WSS and visually or programmatically identifying the \"elbow\" point, which signifies the optimal k where additional clusters cease to significantly improve the clustering performance.\n\nThis data-driven approach allowed me to discern the natural structure within the crash data set based on lane_count and mix type, providing valuable insights into potential groupings of roadway segments with distinct safety characteristics.\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n#Importing required libararies\n#install.packages(\"FactoMineR\")\n#install.packages(\"factoextra\")\nlibrary(cluster)\nlibrary(parameters)\n```\n\n::: {.cell-output .cell-output-stderr}\n```\nWarning: package 'parameters' was built under R version 4.2.3\n```\n:::\n\n```{.r .cell-code}\n#Read in data\nFitData2<-read.csv('Book3.csv') \n\n#Scaling data\nFitData2 <- scale(FitData2)\n\n#View in data \n#head(FitData2)\n\n#Elbow Method (Number of clusters)\nk.max <- 10\nwss <- sapply(2:k.max, function(k){kmeans(FitData2,k, nstart=10)$tot.withinss})\n#print(wss)\nplot(2:k.max, wss, type=\"b\", pch=16, xlab=\"Number of Cluster K\", \nylab=\"Total within cluster sum of squares\")\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n\n```{.r .cell-code}\n#Finding optimal clusters to the training\nkmeans <- kmeans(FitData2, centers=4, nstart = 10)\n\n#100*kmeans$betweenss / kmeans$totss\n\n\n# #Visualizing clusters \nclusplot(FitData2[,6:7],\n         kmeans$cluster,\n         lines = 0,\n         shade = TRUE,\n         color = TRUE,\n         labels = 2,\n         plotchar = FALSE,\n         span = TRUE,\n         main = paste(\"Cluster of data\"),\n         xlab = '',\n         ylab = '')\nlegend(\"topleft\", legend=c(\"Cluster 1\", \"Cluster 2\", \"Cluster 3\", \"Cluster 4\"), col = c(\"blue\", \"red\", \"purple\",\"green\"), lty= 1:2, cex = 0.8)\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-2.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

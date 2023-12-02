@@ -1,0 +1,61 @@
+---
+title: "Linear/Non-linear Regression"
+author: "Behrokh Bazmara"
+date: "2023-12-01"
+categories: [news, code, analysis]
+---
+
+In my predictive modeling approach, I employed a Random Forest model to predict the occurrence of crashes. Random Forest is an ensemble learning method that combines the predictions of multiple decision trees to enhance overall accuracy and robustness. The data set used for modeling contained a variety of relevant features such as mix types, lane counts, roadway geometry, pavement condition, and environmental characteristics, which could influence crash outcome.
+
+I began by splitting the data set into training and testing sets to evaluate the model's performance. The Random Forest algorithm was then applied to the training data, where a multitude of decision trees were constructed, each trained on a different subset of the data and considering a random subset of features for each split. This diversity and randomness helped mitigate overfitting and increased the model's generalization ability. During the prediction phase, the ensemble of trees collectively contributed to a more accurate and stable prediction of crash occurrences.
+
+
+```{r}
+                   # Random Forest Regression
+
+#Loading dataset
+setwd('C:/Users/behro/OneDrive/Desktop/SS-Infrastructure/project')
+
+#Install the packages
+library(MASS)
+library(lme4)
+library(randomForest)
+library(caTools)
+#install.packages("randomForest")
+#install.packages("pdp")
+#install.packages("randomForestExplainer")
+#install.packages("ggplot2")
+#install.packages("Boruta")
+library(Boruta)
+library(randomForest)
+library(randomForestExplainer)
+library(ggplot2)
+
+
+# View the structure of the data set (Read in data)
+FitData2<-read.csv('Book3.csv') 
+names(FitData2)#looking at the data
+
+#splitting data into training and testing
+split <- sample.split(FitData2, SplitRatio=0.7)
+train <- subset(FitData2, split=="TRUE")
+test <- subset (FitData2, split=="FALSE")
+
+# Fitting the random forest model
+set.seed(100) #Setting seed
+classRF= randomForest(x=train[-13], y=train$Crash, ntree=500)
+classRF
+
+#Model prediction
+rf_model=predict(classRF, newdata= test[-13])
+summary(rf_model)
+
+# Create a scatterplot of actual vs. predicted values
+plot(classRF$predicted, train$Crash,
+     main = "Scatterplot of Actual vs. Predicted Values",
+     xlab = "Actual Values", ylab = "Predicted Values",
+     col = "darkblue", pch = 16)
+
+# Add a diagonal line for reference
+abline(a = 0, b = 1, col = "red", lty = 2)
+```

@@ -1,0 +1,77 @@
+---
+title: "Clssification"
+author: "Behrokh Bazmara"
+date: "2023-12-01"
+categories: [news, code, analysis]
+---
+
+In my classification code, I employed the k-Nearest Neighbors (kNN) algorithm to categorize instances within my data set. The kNN method is a simple yet effective algorithm that classifies data points based on the majority class of their k nearest neighbors in the feature space.
+
+Initially, I preprocessed the data, handling any missing values or normalizing features if necessary. Then, I split the data set into training and testing sets to evaluate the model's performance. After selecting an appropriate value for k, the number of neighbors to consider, I trained the kNN classifier on the training data. During the classification phase, the algorithm examined the features of a test instance and identified its k nearest neighbors based on a chosen distance metric. The class most prevalent among these neighbors was assigned to the test instance. Finally, I assessed the model's accuracy and other relevant metrics on the testing set to gauge its performance. The flexibility and simplicity of the kNN algorithm made it a suitable choice for classifying instances in my data set, providing a practical and interpretable solution for the given classification tasks.
+
+
+
+```{r}
+                   # Classification
+# Install and load necessary packages
+#if (!requireNamespace("class", quietly = TRUE)) {
+ # install.packages("class")
+#}
+#if (!requireNamespace("caret", quietly = TRUE)) {
+ # install.packages("caret")
+#}
+#if (!requireNamespace("ggplot2", quietly = TRUE)) {
+ # install.packages("ggplot2")
+#}
+#if (!requireNamespace("PRROC", quietly = TRUE)) {
+ # install.packages("PRROC")
+#}
+
+library(pROC)
+library(PRROC)
+library(class)
+library(caret)
+library(ggplot2)
+
+# Read in data
+FitData2<-read.csv('Book3.csv') 
+
+#looking at the data
+names(FitData2)
+
+# Split the dataset into training and testing sets
+set.seed(123)
+splitIndex <- createDataPartition(FitData2$LaneCount, p = 0.7, list = FALSE)
+train_data <- FitData2[splitIndex, ]
+test_data <- FitData2[-splitIndex, ]
+
+# Define the number of neighbors (k) for the KNN model
+k <- 9
+
+# Train the KNN model
+knn_model <- knn(train = train_data[, 1:4], test = test_data[, 1:4], cl = train_data$LaneCount, k = k)
+
+# Create a confusion matrix
+conf_matrix <- confusionMatrix(knn_model, as.factor(test_data$LaneCount))
+
+# Display the confusion matrix
+print(conf_matrix)
+
+# Visualize the confusion matrix
+#png(file="cmplot.png")
+conf_matrix_table <- as.table(conf_matrix)
+ggplot(data = as.data.frame(as.table(conf_matrix)), aes(x = Reference, y = Prediction, fill = Freq)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = Freq), vjust = 1) +
+  scale_fill_gradient(low = "orange", high = "darkblue") +
+  theme_minimal() +
+  labs(title = "Plot of Confusion Matrix",
+       x = "Reference",
+       y = "Prediction",
+       fill = "Frequency")
+#dev.off()
+```
+
+
+
+

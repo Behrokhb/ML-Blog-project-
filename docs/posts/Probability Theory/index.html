@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Behrokh Bazmara">
+<meta name="dcterms.date" content="2023-12-01">
+
+<title>Clustering - Probability Theory</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Clustering</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Probability Theory</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">news</div>
+                <div class="quarto-category">code</div>
+                <div class="quarto-category">analysis</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Behrokh Bazmara </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 1, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>In my predictive modeling approach, I utilized a stepwise selection method with a negative binomial model to estimate and forecast the number of crashes based on a diverse set of variables. The data set included features such as mix types, lane counts, roadway geometry, pavement condition, and environmental characteristics, all of which are potential factors influencing the frequency of crashes. The stepwise selection process involved iteratively adding or removing variables to find the subset that contributed most significantly to predicting crash occurrences while avoiding overfitting. The negative binomial model was chosen due to its suitability for count data, especially when dealing with overdispersion, common in crash data.</p>
+<p>I initiated the modeling process by considering the full set of variables and then systematically added or removed predictors based on their statistical significance. This stepwise approach aimed to strike a balance between model simplicity and predictive accuracy. The selected model provided insights into the impact of various road-related factors on crash frequency, allowing for a nuanced understanding of the relationships between mix types, lane counts, roadway geometry, pavement condition, environmental characteristics, and the likelihood of crashes. The negative binomial model’s flexibility in handling count data and the stepwise selection method’s ability to refine the model based on data-driven criteria collectively contributed to a robust predictive framework for estimating crash occurrences in the given context.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Probability theory using Negative Binomial</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#please find the explanation at the end of the code!</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Install the package for Negative Binomial</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'C:/Users/behro/OneDrive/Desktop/SS-Infrastructure/project'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("lme4") </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#library(ggcorrplot)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("ggcorrplot")</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("ggplot2")</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>FitData2<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">'Book3.csv'</span>) </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#looking at the data</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FitData2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "AADT"         "Latitude"     "Longitude"    "yn"           "Divided"     
+ [6] "LaneCount"    "DGAC"         "Latex"        "SMA"          "PCCP"        
+[11] "Age"          "Friction"     "Macro"        "IRI"          "Gradient"    
+[16] "Curvature"    "LatitudeGPS"  "LongitudeGps" "Crash"        "lnAADT"      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(FitData2, <span class="cf">function</span>(x) <span class="fu">table</span>(<span class="fu">is.na</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        AADT.FALSE     Latitude.FALSE    Longitude.FALSE           yn.FALSE 
+              8816               8816               8816               8816 
+     Divided.FALSE    LaneCount.FALSE         DGAC.FALSE        Latex.FALSE 
+              8816               8816               8816               8816 
+         SMA.FALSE         PCCP.FALSE          Age.FALSE     Friction.FALSE 
+              8816               8816               8816               8816 
+       Macro.FALSE          IRI.FALSE     Gradient.FALSE    Curvature.FALSE 
+              8816               8816               8816               8816 
+ LatitudeGPS.FALSE LongitudeGps.FALSE        Crash.FALSE       lnAADT.FALSE 
+              8816               8816               8816               8816 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation Matrix</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cormat<span class="ot">&lt;-</span> <span class="fu">cor</span>(FitData2)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>cormat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     AADT     Latitude    Longitude            yn     Divided
+AADT          1.000000000  0.382693033  0.336510001 -0.1036752130  0.35229051
+Latitude      0.382693033  1.000000000  0.549169304  0.0867984066  0.07971012
+Longitude     0.336510001  0.549169304  1.000000000  0.0615009111  0.09100533
+yn           -0.103675213  0.086798407  0.061500911  1.0000000000 -0.10401913
+Divided       0.352290506  0.079710125  0.091005327 -0.1040191257  1.00000000
+LaneCount     0.144392325  0.204102326  0.259898519  0.1087742622 -0.42121275
+DGAC         -0.342787046 -0.186630838 -0.267382176  0.1986031579 -0.35249134
+Latex        -0.143490494 -0.217002363 -0.329335117  0.0049419700  0.04027118
+SMA           0.482314027  0.292613391  0.356983572 -0.1982727448  0.29135814
+PCCP         -0.104437562  0.052998652  0.241103815 -0.0237787399  0.11698407
+Age          -0.158760926 -0.024844945  0.158414166 -0.0004544039 -0.05989411
+Friction     -0.415230010 -0.389880287 -0.438834333 -0.1678539143 -0.09097330
+Macro         0.092220941  0.023476717 -0.041446945 -0.0582230520 -0.01326821
+IRI          -0.160528788  0.041491845  0.140259933  0.3264015510 -0.22222393
+Gradient      0.005037783 -0.003607073 -0.005207780  0.0036117087  0.01007699
+Curvature     0.061725730  0.010116036 -0.002109046  0.1469357438 -0.02601795
+LatitudeGPS   0.382692421  0.999999967  0.549167479  0.0867951489  0.07970644
+LongitudeGps  0.336512300  0.549168585  0.999999961  0.0615026871  0.09100524
+Crash         0.361690726  0.244032354  0.186330460  0.2336554548  0.15408900
+lnAADT        0.835351570  0.342518127  0.324002405 -0.0195230055  0.40428459
+                LaneCount        DGAC        Latex           SMA         PCCP
+AADT          0.144392325 -0.34278705 -0.143490494  0.4823140266 -0.104437562
+Latitude      0.204102326 -0.18663084 -0.217002363  0.2926133913  0.052998652
+Longitude     0.259898519 -0.26738218 -0.329335117  0.3569835715  0.241103815
+yn            0.108774262  0.19860316  0.004941970 -0.1982727448 -0.023778740
+Divided      -0.421212754 -0.35249134  0.040271179  0.2913581427  0.116984071
+LaneCount     1.000000000 -0.00429124 -0.079532105  0.0817235549 -0.073712310
+DGAC         -0.004291240  1.00000000 -0.298559690 -0.7697597871 -0.224670040
+Latex        -0.079532105 -0.29855969  1.000000000 -0.2254810823 -0.065811237
+SMA           0.081723555 -0.76975979 -0.225481082  1.0000000000 -0.169677440
+PCCP         -0.073712310 -0.22467004 -0.065811237 -0.1696774395  1.000000000
+Age          -0.015097045 -0.05923362 -0.161581052 -0.1334001818  0.650244134
+Friction     -0.174884591  0.21076334  0.243654955 -0.3719020243  0.036211487
+Macro         0.132768160 -0.08099538 -0.080735534  0.1798355619 -0.114403038
+IRI           0.127621155  0.18473958 -0.009695252 -0.2889567507  0.233892002
+Gradient     -0.007350165 -0.00110724  0.011015114 -0.0008447454 -0.009595485
+Curvature     0.024597182  0.07032162  0.029959542 -0.0716087422 -0.041406475
+LatitudeGPS   0.204101348 -0.18662624 -0.217004614  0.2926093663  0.052999860
+LongitudeGps  0.259893844 -0.26737941 -0.329337823  0.3569835555  0.241100795
+Crash         0.144932017 -0.01725508 -0.061020210  0.0790970272 -0.060913658
+lnAADT        0.044847392 -0.31190922 -0.095631964  0.4253369237 -0.109064489
+                       Age     Friction         Macro          IRI
+AADT         -0.1587609255 -0.415230010  0.0922209412 -0.160528788
+Latitude     -0.0248449450 -0.389880287  0.0234767171  0.041491845
+Longitude     0.1584141663 -0.438834333 -0.0414469448  0.140259933
+yn           -0.0004544039 -0.167853914 -0.0582230520  0.326401551
+Divided      -0.0598941084 -0.090973297 -0.0132682097 -0.222223926
+LaneCount    -0.0150970455 -0.174884591  0.1327681600  0.127621155
+DGAC         -0.0592336203  0.210763341 -0.0809953807  0.184739579
+Latex        -0.1615810517  0.243654955 -0.0807355339 -0.009695252
+SMA          -0.1334001818 -0.371902024  0.1798355619 -0.288956751
+PCCP          0.6502441336  0.036211487 -0.1144030381  0.233892002
+Age           1.0000000000 -0.004908474  0.0556296414  0.257779550
+Friction     -0.0049084743  1.000000000 -0.0578124559 -0.208562713
+Macro         0.0556296414 -0.057812456  1.0000000000  0.091219056
+IRI           0.2577795499 -0.208562713  0.0912190564  1.000000000
+Gradient     -0.0089316816 -0.002515723 -0.0001392182 -0.015133902
+Curvature    -0.0219502445 -0.139511290  0.0257072470  0.204565067
+LatitudeGPS  -0.0248450008 -0.389879453  0.0234781289  0.041493732
+LongitudeGps  0.1584140933 -0.438832739 -0.0414425553  0.140257999
+Crash        -0.0983321348 -0.302675329 -0.0168212158  0.173922828
+lnAADT       -0.1763974925 -0.392309573 -0.0114531822 -0.155893535
+                  Gradient    Curvature  LatitudeGPS LongitudeGps        Crash
+AADT          0.0050377827  0.061725730  0.382692421  0.336512300  0.361690726
+Latitude     -0.0036070735  0.010116036  0.999999967  0.549168585  0.244032354
+Longitude    -0.0052077804 -0.002109046  0.549167479  0.999999961  0.186330460
+yn            0.0036117087  0.146935744  0.086795149  0.061502687  0.233655455
+Divided       0.0100769888 -0.026017952  0.079706439  0.091005243  0.154088999
+LaneCount    -0.0073501646  0.024597182  0.204101348  0.259893844  0.144932017
+DGAC         -0.0011072403  0.070321624 -0.186626245 -0.267379408 -0.017255081
+Latex         0.0110151144  0.029959542 -0.217004614 -0.329337823 -0.061020210
+SMA          -0.0008447454 -0.071608742  0.292609366  0.356983555  0.079097027
+PCCP         -0.0095954854 -0.041406475  0.052999860  0.241100795 -0.060913658
+Age          -0.0089316816 -0.021950245 -0.024845001  0.158414093 -0.098332135
+Friction     -0.0025157234 -0.139511290 -0.389879453 -0.438832739 -0.302675329
+Macro        -0.0001392182  0.025707247  0.023478129 -0.041442555 -0.016821216
+IRI          -0.0151339016  0.204565067  0.041493732  0.140257999  0.173922828
+Gradient      1.0000000000 -0.009613057 -0.003608268 -0.005203478 -0.009375788
+Curvature    -0.0096130566  1.000000000  0.010119044 -0.002105554  0.125889418
+LatitudeGPS  -0.0036082680  0.010119044  1.000000000  0.549166759  0.244025290
+LongitudeGps -0.0052034777 -0.002105554  0.549166759  1.000000000  0.186335639
+Crash        -0.0093757875  0.125889418  0.244025290  0.186335639  1.000000000
+lnAADT        0.0066595772  0.043316382  0.342518906  0.324003528  0.302312430
+                   lnAADT
+AADT          0.835351570
+Latitude      0.342518127
+Longitude     0.324002405
+yn           -0.019523006
+Divided       0.404284590
+LaneCount     0.044847392
+DGAC         -0.311909222
+Latex        -0.095631964
+SMA           0.425336924
+PCCP         -0.109064489
+Age          -0.176397492
+Friction     -0.392309573
+Macro        -0.011453182
+IRI          -0.155893535
+Gradient      0.006659577
+Curvature     0.043316382
+LatitudeGPS   0.342518906
+LongitudeGps  0.324003528
+Crash         0.302312430
+lnAADT        1.000000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Set the reference value for a categorical variable. (NO categorical as I made them binary in the excel file, so I commented)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> FitData2<span class="sc">$</span>yn<span class="ot">&lt;-</span><span class="fu">as.factor</span>(FitData2<span class="sc">$</span>yn)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> FitData2<span class="sc">$</span>Divided<span class="ot">&lt;-</span><span class="fu">as.factor</span>(FitData2<span class="sc">$</span>Divided)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a> FitData2<span class="sc">$</span>DGAC<span class="ot">&lt;-</span><span class="fu">as.factor</span>(FitData2<span class="sc">$</span>DGAC)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> FitData2<span class="sc">$</span>SMA<span class="ot">&lt;-</span><span class="fu">as.factor</span>(FitData2<span class="sc">$</span>SMA)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a> FitData2<span class="sc">$</span>PCCP<span class="ot">&lt;-</span><span class="fu">as.factor</span>(FitData2<span class="sc">$</span>PCCP)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a> FitData2<span class="sc">$</span>Latex<span class="ot">&lt;-</span><span class="fu">as.factor</span>(FitData2<span class="sc">$</span>Latex)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Create a base model binomial model.  The SPF should always include traffic volume and I must input the natural log conversion of the traffic volume, i.e., ln(AADT).</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>base_model <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(Crash <span class="sc">~</span> lnAADT,<span class="at">data =</span> FitData2)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>full_modell<span class="ot">&lt;-</span><span class="fu">glm.nb</span>(Crash<span class="sc">~</span> lnAADT<span class="sc">+</span> yn <span class="sc">+</span> Divided <span class="sc">+</span> LaneCount <span class="sc">+</span> DGAC <span class="sc">+</span> Latex <span class="sc">+</span> SMA <span class="sc">+</span> PCCP <span class="sc">+</span> Age <span class="sc">+</span> Friction <span class="sc">+</span> Macro <span class="sc">+</span> IRI <span class="sc">+</span> Gradient <span class="sc">+</span> Curvature, <span class="at">data=</span>FitData2)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Create the full model</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>StepWiseFit <span class="ot">&lt;-</span> <span class="fu">step</span>(base_model,<span class="at">scope =</span> <span class="fu">list</span>(<span class="at">lower=</span> base_model,<span class="at">upper=</span> full_modell),<span class="at">direction =</span> <span class="st">'forward'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=30177.42
+Crash ~ lnAADT
+
+            Df Deviance   AIC
++ Friction   1   7207.9 29123
++ yn         1   7399.3 29315
++ IRI        1   7825.1 29741
++ LaneCount  1   7909.9 29825
++ Curvature  1   8116.7 30032
++ Divided    1   8120.5 30036
++ Age        1   8188.1 30104
++ Latex      1   8202.5 30118
++ PCCP       1   8241.4 30157
++ SMA        1   8253.3 30169
++ Macro      1   8255.9 30172
++ DGAC       1   8258.4 30174
+&lt;none&gt;           8263.8 30177
++ Gradient   1   8263.7 30179
+
+Step:  AIC=29051.58
+Crash ~ lnAADT + Friction
+
+            Df Deviance   AIC
++ yn         1   7511.1 28457
++ LaneCount  1   7895.0 28841
++ IRI        1   7922.6 28869
++ Divided    1   7940.0 28886
++ Age        1   8014.8 28961
++ Curvature  1   8023.1 28969
++ DGAC       1   8070.3 29016
++ PCCP       1   8087.4 29033
++ SMA        1   8096.2 29042
++ Macro      1   8097.5 29043
++ Latex      1   8100.3 29046
+&lt;none&gt;           8107.7 29052
++ Gradient   1   8107.7 29054
+
+Step:  AIC=28413.95
+Crash ~ lnAADT + Friction + yn
+
+            Df Deviance   AIC
++ Divided    1   7936.5 28134
++ LaneCount  1   8026.4 28224
++ Age        1   8126.2 28323
++ Curvature  1   8172.1 28369
++ SMA        1   8181.1 28378
++ IRI        1   8190.5 28388
++ Latex      1   8199.6 28397
++ PCCP       1   8200.9 28398
++ DGAC       1   8214.4 28412
+&lt;none&gt;           8218.8 28414
++ Macro      1   8218.4 28416
++ Gradient   1   8218.5 28416
+
+Step:  AIC=28130.91
+Crash ~ lnAADT + Friction + yn + Divided
+
+            Df Deviance   AIC
++ LaneCount  1   7655.2 27669
++ Age        1   8030.6 28044
++ IRI        1   8066.6 28080
++ Curvature  1   8069.9 28083
++ PCCP       1   8086.9 28100
++ Latex      1   8091.4 28105
++ SMA        1   8110.7 28124
++ DGAC       1   8115.2 28129
+&lt;none&gt;           8119.4 28131
++ Gradient   1   8118.7 28132
++ Macro      1   8119.4 28133
+
+Step:  AIC=27650.25
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount
+
+            Df Deviance   AIC
++ Age        1   8028.9 27570
++ IRI        1   8033.3 27575
++ Curvature  1   8061.8 27603
++ PCCP       1   8089.6 27631
++ DGAC       1   8091.0 27633
++ Macro      1   8095.6 27637
++ Latex      1   8098.4 27640
+&lt;none&gt;           8110.8 27650
++ SMA        1   8110.2 27652
++ Gradient   1   8110.6 27652
+
+Step:  AIC=27569.83
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount + Age
+
+            Df Deviance   AIC
++ IRI        1   8001.2 27467
++ Curvature  1   8057.8 27523
++ Latex      1   8082.9 27548
++ Macro      1   8090.2 27556
++ DGAC       1   8095.8 27561
+&lt;none&gt;           8106.4 27570
++ SMA        1   8105.1 27571
++ PCCP       1   8105.2 27571
++ Gradient   1   8106.0 27571
+
+Step:  AIC=27464.61
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount + Age + 
+    IRI
+
+            Df Deviance   AIC
++ Curvature  1   8127.6 27436
++ Latex      1   8129.7 27438
++ Macro      1   8138.0 27447
++ SMA        1   8155.2 27464
++ DGAC       1   8155.6 27464
+&lt;none&gt;           8158.0 27465
++ PCCP       1   8156.7 27465
++ Gradient   1   8157.7 27466
+
+Step:  AIC=27436.14
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount + Age + 
+    IRI + Curvature
+
+           Df Deviance   AIC
++ Latex     1   8125.0 27408
++ Macro     1   8132.8 27416
++ SMA       1   8151.6 27435
++ DGAC      1   8152.5 27436
+&lt;none&gt;          8154.7 27436
++ PCCP      1   8154.1 27438
++ Gradient  1   8154.4 27438
+
+Step:  AIC=27408.4
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount + Age + 
+    IRI + Curvature + Latex
+
+           Df Deviance   AIC
++ Macro     1   8111.6 27385
+&lt;none&gt;          8136.7 27408
++ SMA       1   8136.2 27410
++ PCCP      1   8136.2 27410
++ Gradient  1   8136.4 27410
++ DGAC      1   8136.5 27410
+
+Step:  AIC=27385.32
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount + Age + 
+    IRI + Curvature + Latex + Macro
+
+           Df Deviance   AIC
++ SMA       1   8127.9 27383
++ DGAC      1   8129.7 27385
+&lt;none&gt;          8132.2 27385
++ PCCP      1   8130.5 27386
++ Gradient  1   8131.9 27387
+
+Step:  AIC=27383.04
+Crash ~ lnAADT + Friction + yn + Divided + LaneCount + Age + 
+    IRI + Curvature + Latex + Macro + SMA
+
+           Df Deviance   AIC
+&lt;none&gt;          8120.2 27383
++ DGAC      1   8119.0 27384
++ PCCP      1   8119.0 27384
++ Gradient  1   8119.9 27385</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(StepWiseFit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm.nb(formula = Crash ~ lnAADT + Friction + yn + Divided + LaneCount + 
+    Age + IRI + Curvature + Latex + Macro + SMA, data = FitData2, 
+    init.theta = 0.9268485234, link = log)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.7462  -0.9723  -0.5686   0.2126   7.4490  
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  -2.333449   0.236090  -9.884  &lt; 2e-16 ***
+lnAADT        0.303521   0.014160  21.435  &lt; 2e-16 ***
+Friction     -0.054863   0.002623 -20.915  &lt; 2e-16 ***
+yn1           0.829530   0.036787  22.550  &lt; 2e-16 ***
+Divided1      1.207650   0.050552  23.889  &lt; 2e-16 ***
+LaneCount     0.542440   0.024544  22.100  &lt; 2e-16 ***
+Age          -0.022080   0.002018 -10.943  &lt; 2e-16 ***
+IRI           0.200922   0.020445   9.827  &lt; 2e-16 ***
+Curvature   204.398987  29.403738   6.951 3.62e-12 ***
+Latex1       -0.350783   0.068954  -5.087 3.63e-07 ***
+Macro        -0.471428   0.087670  -5.377 7.56e-08 ***
+SMA1          0.080317   0.039742   2.021   0.0433 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(0.9268) family taken to be 1)
+
+    Null deviance: 14113.4  on 8815  degrees of freedom
+Residual deviance:  8120.2  on 8804  degrees of freedom
+AIC: 27385
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  0.9268 
+          Std. Err.:  0.0266 
+
+ 2 x log-likelihood:  -27359.0430 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(StepWiseFit)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Estimate   Std. Error    z value      Pr(&gt;|z|)
+(Intercept)  -2.33344930  0.236090474  -9.883708  4.898601e-23
+lnAADT        0.30352129  0.014160144  21.434901 6.316823e-102
+Friction     -0.05486347  0.002623175 -20.914910  3.917635e-97
+yn1           0.82953006  0.036786588  22.549796 1.349053e-112
+Divided1      1.20765000  0.050551760  23.889376 3.949606e-126
+LaneCount     0.54244042  0.024544432  22.100345 3.136613e-108
+Age          -0.02207983  0.002017757 -10.942757  7.197696e-28
+IRI           0.20092202  0.020445238   9.827326  8.586842e-23
+Curvature   204.39898667 29.403737606   6.951463  3.615179e-12
+Latex1       -0.35078254  0.068954031  -5.087194  3.633999e-07
+Macro        -0.47142753  0.087669743  -5.377312  7.560621e-08
+SMA1          0.08031675  0.039741777   2.020965  4.328337e-02</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a histogram of predicted counts</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(StepWiseFit<span class="sc">$</span>fitted.values, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Distribution of Predicted Crash Probabilities"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Predicted Probabilities"</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">col =</span> <span class="st">"green"</span>, </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"black"</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

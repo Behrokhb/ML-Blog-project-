@@ -1,0 +1,63 @@
+---
+title: "Probability Theory"
+author: "Behrokh Bazmara"
+date: "2023-12-01"
+categories: [news, code, analysis]
+---
+
+In my predictive modeling approach, I utilized a stepwise selection method with a negative binomial model to estimate and forecast the number of crashes based on a diverse set of variables. The data set included features such as mix types, lane counts, roadway geometry, pavement condition, and environmental characteristics, all of which are potential factors influencing the frequency of crashes. The stepwise selection process involved iteratively adding or removing variables to find the subset that contributed most significantly to predicting crash occurrences while avoiding overfitting. The negative binomial model was chosen due to its suitability for count data, especially when dealing with overdispersion, common in crash data.
+
+I initiated the modeling process by considering the full set of variables and then systematically added or removed predictors based on their statistical significance. This stepwise approach aimed to strike a balance between model simplicity and predictive accuracy. The selected model provided insights into the impact of various road-related factors on crash frequency, allowing for a nuanced understanding of the relationships between mix types, lane counts, roadway geometry, pavement condition, environmental characteristics, and the likelihood of crashes. The negative binomial model's flexibility in handling count data and the stepwise selection method's ability to refine the model based on data-driven criteria collectively contributed to a robust predictive framework for estimating crash occurrences in the given context.
+
+```{r}
+                # Probability theory using Negative Binomial
+
+#please find the explanation at the end of the code!
+
+#Install the package for Negative Binomial
+setwd('C:/Users/behro/OneDrive/Desktop/SS-Infrastructure/project')
+#install.packages("lme4") 
+library(MASS)
+#library(ggcorrplot)
+#install.packages("ggcorrplot")
+#install.packages("ggplot2")
+
+# Read in data
+FitData2<-read.csv('Book3.csv') 
+
+#looking at the data
+names(FitData2)
+sapply(FitData2, function(x) table(is.na(x)))
+
+# Correlation Matrix
+cormat<- cor(FitData2)
+cormat
+
+#Set the reference value for a categorical variable. (NO categorical as I made them binary in the excel file, so I commented)
+ FitData2$yn<-as.factor(FitData2$yn)
+ FitData2$Divided<-as.factor(FitData2$Divided)
+ FitData2$DGAC<-as.factor(FitData2$DGAC)
+ FitData2$SMA<-as.factor(FitData2$SMA)
+ FitData2$PCCP<-as.factor(FitData2$PCCP)
+ FitData2$Latex<-as.factor(FitData2$Latex)
+
+   
+#Create a base model binomial model.  The SPF should always include traffic volume and I must input the natural log conversion of the traffic volume, i.e., ln(AADT).
+base_model <- glm.nb(Crash ~ lnAADT,data = FitData2)
+full_modell<-glm.nb(Crash~ lnAADT+ yn + Divided + LaneCount + DGAC + Latex + SMA + PCCP + Age + Friction + Macro + IRI + Gradient + Curvature, data=FitData2)
+
+#Create the full model
+StepWiseFit <- step(base_model,scope = list(lower= base_model,upper= full_modell),direction = 'forward') 
+summary(StepWiseFit)
+summary(StepWiseFit)$coefficients
+
+# Create a histogram of predicted counts
+hist(StepWiseFit$fitted.values, 
+     main = "Distribution of Predicted Crash Probabilities",
+     xlab = "Predicted Probabilities", 
+     ylab = "Frequency",
+          col = "green", 
+     border = "black", 
+     breaks = 20)
+
+```
